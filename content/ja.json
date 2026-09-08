@@ -1,0 +1,41 @@
+{
+  "title": "{pct}意見の取りこぼし体験",
+  "story_intro": "N={N}件のうち意見Xは{ni}件({pct})。調査リソースがK={K}件しかない時、ランダムサンプリングでどれだけ見落とすかを{T}回試行で確認する。",
+  "sections": {
+    "scenario": "シナリオ",
+    "result": "ランダムサンプリング結果",
+    "distribution": "意見分布 (上位{top}クラスタ)",
+    "note": "比較の見方"
+  },
+  "labels": {
+    "population": "母集団 N",
+    "x_count": "意見X件数 n_X",
+    "sample_size": "サンプル件数 K",
+    "trials": "試行回数 T",
+    "alpha": "Zipf alpha",
+    "clusters": "クラスタ数 M_eff",
+    "observed": "X観測あり",
+    "missed": "X観測なし",
+    "observed_rate": "観測確率 (実測)",
+    "theoretical_rate": "観測確率 (理論: 1-exp(-K*n_X/N))",
+    "theoretical_exact": "観測確率 (理論: exact)",
+    "x_rank": "Xの順位"
+  },
+  "chart": {
+    "top_clusters": "件数順で上位{top}クラスタを表示",
+    "highlight_x": "意見Xをハイライト"
+  },
+  "buttons": {
+    "rerun": "{T}回を再実行"
+  },
+  "messages": {
+    "x_not_in_top": "意見Xは上位{top}に入っていない (rank={rank})",
+    "last_run": "最終実行",
+    "rank_suffix": "位"
+  },
+  "notes": {
+    "line1": "{pct}の意見でも、K={K}のランダム調査では見えない回が多くなる。",
+    "line2": "理論値と実測を並べると、サンプル不足で生じる取りこぼしの大きさが直感的に分かる。",
+    "line3": "URLでシナリオを変更できる: 例 #N=10000&K=100&ni=10&M=200&a=1.00&g=1 (N=母集団, K=サンプル件数, ni=意見X件数, T=試行回数, a=Zipf alpha, M=クラスタ数を固定, g=実在クラスタの最小件数)"
+  }
+}
