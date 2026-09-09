@@ -51,5 +51,6 @@
 
 ## 次フェーズ (MVP後)
 - [x] URL ハッシュパラメータでのシナリオ変更 (`#N=&K=&ni=&T=&a=&M=&g=`)。README に一覧あり。
-- [ ] `K`, `T`, `n_X` の限定的な変更 UI (フォーム) を追加。
+- [x] パラメータ変更 UI (フォーム) を追加 (`playground.html`)。
+- [x] ランディング/解説と実験室の2ページ構成に分割。`index.html` = ドット可視化ヒーロー + 解説、`playground.html` = パラメータ実験室。文言はそれぞれ `content/ja_landing.json` / `content/ja.json`。
 - [ ] 言語切替 (`ja/en/tw`) のドロップダウン追加。

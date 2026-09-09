@@ -16,7 +16,7 @@
         --accent: #0e6f63;
         --accent-2: #c05f2f;
         --x: #b4382d;
-        --bar: #9ca4a5;
+        --dot: #cfc8b8;
         --font-main: "Hiragino Mincho ProN", "Yu Mincho", "BIZ UDPMincho", Georgia, serif;
         --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
       }
@@ -41,28 +41,43 @@
         padding: 24px 18px 42px;
       }
 
-      .hero {
-        margin-bottom: 14px;
+      /* ---- hero (slide) ---- */
+      .slide {
+        min-height: 92vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 16px;
+      }
+
+      .kicker {
+        font-size: 13px;
+        letter-spacing: 2.4px;
+        text-transform: uppercase;
+        color: var(--accent);
       }
 
       h1 {
         margin: 0;
-        font-size: clamp(24px, 3vw, 34px);
+        font-size: clamp(26px, 4vw, 44px);
+        line-height: 1.3;
         letter-spacing: 0.4px;
+        max-width: 24em;
       }
 
-      .intro {
-        margin-top: 8px;
-        max-width: 70ch;
-        font-size: 15px;
-        line-height: 1.55;
+      .lede {
+        margin: 0;
+        max-width: 62ch;
+        font-size: clamp(14px, 1.6vw, 17px);
+        line-height: 1.7;
         color: var(--muted);
       }
 
-      .grid {
+      .hero-grid {
         display: grid;
-        grid-template-columns: 340px 1fr;
-        gap: 14px;
+        grid-template-columns: minmax(0, 1.5fr) minmax(260px, 1fr);
+        gap: 16px;
+        align-items: stretch;
       }
 
       .card {
@@ -73,468 +88,395 @@
         backdrop-filter: blur(6px);
       }
 
-      .panel {
+      .viz {
         padding: 14px;
-      }
-
-      .panel h2 {
-        margin: 0 0 12px;
-        font-size: 14px;
-        text-transform: uppercase;
-        letter-spacing: 0.9px;
-        color: var(--muted);
-      }
-
-      .kv {
-        display: grid;
-        grid-template-columns: 1fr auto;
-        gap: 8px;
-        align-items: baseline;
-        border-bottom: 1px dashed rgba(0, 0, 0, 0.12);
-        padding: 9px 2px;
-      }
-
-      .kv:last-child {
-        border-bottom: 0;
-      }
-
-      .kv .label {
-        font-size: 14px;
-        color: var(--muted);
-      }
-
-      .kv .value {
-        font-family: var(--font-mono);
-        font-size: 14px;
-        font-variant-numeric: tabular-nums;
-        background: rgba(14, 111, 99, 0.09);
-        border: 1px solid rgba(14, 111, 99, 0.25);
-        border-radius: 999px;
-        padding: 2px 8px;
-        white-space: nowrap;
-      }
-
-      .content {
-        display: grid;
-        grid-template-columns: 1fr;
-        gap: 14px;
-      }
-
-      .section {
-        padding: 15px 16px;
-      }
-
-      .section h2 {
-        margin: 0;
-        font-size: 18px;
-      }
-
-      .sub {
-        margin-top: 6px;
-        font-size: 13px;
-        color: var(--muted);
-      }
-
-      .result-grid {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 10px;
-        margin-top: 12px;
-      }
-
-      .metric {
-        border: 1px solid rgba(0, 0, 0, 0.1);
-        background: rgba(255, 255, 255, 0.62);
-        border-radius: 12px;
-        padding: 10px;
-      }
-
-      .metric .name {
-        font-size: 12px;
-        color: var(--muted);
-      }
-
-      .metric .num {
-        margin-top: 5px;
-        font-family: var(--font-mono);
-        font-size: 18px;
-        font-variant-numeric: tabular-nums;
-      }
-
-      .action-row {
-        margin-top: 12px;
         display: flex;
-        align-items: center;
+        flex-direction: column;
         gap: 10px;
-        flex-wrap: wrap;
       }
 
-      .btn {
-        appearance: none;
-        border: 1px solid rgba(0, 0, 0, 0.2);
-        background: rgba(14, 111, 99, 0.12);
-        color: var(--ink);
-        border-radius: 999px;
-        padding: 8px 14px;
-        font-size: 14px;
-        font-family: var(--font-main);
-        cursor: pointer;
-      }
-
-      .btn:hover {
-        filter: brightness(0.98);
-      }
-
-      .status {
-        font-size: 12px;
-        color: var(--muted);
+      .viz canvas {
+        width: 100%;
+        height: auto;
+        display: block;
+        border-radius: 10px;
       }
 
       .legend {
-        margin-top: 10px;
-        font-size: 13px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 14px;
+        font-size: 12.5px;
         color: var(--muted);
       }
 
-      .legend .tag {
-        display: inline-block;
-        font-family: var(--font-mono);
-        border: 1px solid rgba(0, 0, 0, 0.15);
-        border-radius: 999px;
-        padding: 2px 8px;
-        margin-left: 8px;
-        background: rgba(180, 56, 45, 0.11);
-      }
-
-      .bars {
-        margin-top: 12px;
-        display: grid;
-        grid-template-columns: 1fr;
+      .legend .item {
+        display: inline-flex;
+        align-items: center;
         gap: 6px;
       }
 
-      .bar-row {
-        display: grid;
-        grid-template-columns: 66px 1fr 72px;
-        gap: 8px;
-        align-items: center;
+      .swatch {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        display: inline-block;
+      }
+
+      .swatch.all { background: var(--dot); }
+      .swatch.x { background: var(--x); }
+      .swatch.sampled { background: var(--ink); }
+
+      .panel {
+        padding: 18px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        justify-content: center;
+      }
+
+      .big-stat .num {
         font-family: var(--font-mono);
-        font-size: 12px;
+        font-size: clamp(44px, 6vw, 68px);
+        line-height: 1;
+        color: var(--x);
       }
 
-      .bar-row .label {
-        color: var(--muted);
-        white-space: nowrap;
-      }
-
-      .bar-track {
-        height: 18px;
-        border-radius: 999px;
-        background: rgba(0, 0, 0, 0.07);
-        overflow: hidden;
-        border: 1px solid rgba(0, 0, 0, 0.08);
-      }
-
-      .bar-fill {
-        height: 100%;
-        width: 0;
-        background: linear-gradient(90deg, #8e9a9b, #7f8889);
-        border-radius: inherit;
-      }
-
-      .bar-row.x .bar-fill {
-        background: linear-gradient(90deg, #ce5f52, #b4382d);
-      }
-
-      .bar-row .count {
-        text-align: right;
-        font-variant-numeric: tabular-nums;
-      }
-
-      .x-rank {
-        margin-top: 10px;
-        font-family: var(--font-mono);
-        font-size: 13px;
-        color: var(--muted);
-      }
-
-      .note {
-        margin-top: 8px;
-        font-size: 14px;
+      .big-stat .caption {
+        margin-top: 6px;
+        font-size: 13.5px;
         color: var(--muted);
         line-height: 1.5;
       }
 
-      @media (max-width: 920px) {
-        .grid {
+      .verdict {
+        min-height: 3em;
+        font-size: 15px;
+        line-height: 1.5;
+        border-left: 3px solid var(--card-border);
+        padding-left: 10px;
+      }
+
+      .verdict.miss {
+        border-left-color: var(--x);
+        color: var(--x);
+      }
+
+      .verdict.hit {
+        border-left-color: var(--accent);
+        color: var(--accent);
+      }
+
+      .tally {
+        font-family: var(--font-mono);
+        font-size: 13px;
+        color: var(--muted);
+      }
+
+      .action-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        align-items: center;
+      }
+
+      .btn {
+        appearance: none;
+        border: 1px solid rgba(14, 111, 99, 0.55);
+        background: rgba(14, 111, 99, 0.1);
+        color: var(--accent);
+        font-family: inherit;
+        font-size: 13.5px;
+        padding: 8px 12px;
+        border-radius: 999px;
+        cursor: pointer;
+      }
+
+      .btn:hover {
+        background: rgba(14, 111, 99, 0.18);
+      }
+
+      .btn.secondary {
+        border-color: var(--card-border);
+        background: rgba(255, 255, 255, 0.5);
+        color: var(--muted);
+      }
+
+      .cta {
+        display: inline-block;
+        margin-top: 4px;
+        font-size: 15px;
+        color: var(--accent-2);
+        text-decoration: none;
+        border-bottom: 1px dashed var(--accent-2);
+      }
+
+      .cta:hover {
+        border-bottom-style: solid;
+      }
+
+      .scroll-hint {
+        text-align: center;
+        color: var(--muted);
+        font-size: 12.5px;
+        letter-spacing: 1.5px;
+      }
+
+      /* ---- explanation ---- */
+      .explain {
+        margin-top: 40px;
+        display: grid;
+        gap: 14px;
+      }
+
+      .section {
+        padding: 20px;
+      }
+
+      .section h2 {
+        margin: 0 0 10px;
+        font-size: 19px;
+        letter-spacing: 0.4px;
+      }
+
+      .section p {
+        margin: 0 0 10px;
+        max-width: 74ch;
+        font-size: 15px;
+        line-height: 1.8;
+      }
+
+      .section p:last-child {
+        margin-bottom: 0;
+      }
+
+      .formula {
+        font-family: var(--font-mono);
+        font-size: 14px;
+        background: rgba(255, 255, 255, 0.6);
+        border: 1px solid var(--card-border);
+        border-radius: 8px;
+        padding: 8px 12px;
+        display: inline-block;
+        margin: 4px 0 10px;
+      }
+
+      .table-wrap {
+        overflow-x: auto;
+      }
+
+      table {
+        border-collapse: collapse;
+        font-family: var(--font-mono);
+        font-size: 13px;
+        margin: 6px 0 4px;
+      }
+
+      th, td {
+        border: 1px solid var(--card-border);
+        padding: 6px 12px;
+        text-align: right;
+        white-space: nowrap;
+      }
+
+      th {
+        background: rgba(255, 255, 255, 0.55);
+        font-weight: normal;
+        color: var(--muted);
+      }
+
+      td.danger { color: var(--x); }
+
+      .table-note {
+        font-size: 12.5px;
+        color: var(--muted);
+        margin-top: 4px;
+      }
+
+      .cta-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 18px;
+        align-items: baseline;
+      }
+
+      footer {
+        margin-top: 30px;
+        font-size: 12.5px;
+        color: var(--muted);
+        text-align: center;
+      }
+
+      footer a {
+        color: var(--muted);
+      }
+
+      @media (max-width: 760px) {
+        .hero-grid {
           grid-template-columns: 1fr;
         }
-
-        .result-grid {
-          grid-template-columns: 1fr;
+        .slide {
+          min-height: 0;
         }
       }
     </style>
   </head>
   <body>
     <div class="page">
-      <header class="hero">
-        <h1 id="title"></h1>
-        <p class="intro" id="storyIntro"></p>
-      </header>
+      <section class="slide">
+        <div>
+          <div class="kicker" id="kicker"></div>
+          <h1 id="headline"></h1>
+        </div>
+        <p class="lede" id="lede"></p>
 
-      <div class="grid">
-        <aside class="card panel">
-          <h2 id="scenarioTitle"></h2>
-
-          <div class="kv">
-            <div class="label" id="labelPopulation"></div>
-            <div class="value" id="valuePopulation"></div>
-          </div>
-          <div class="kv">
-            <div class="label" id="labelXCount"></div>
-            <div class="value" id="valueXCount"></div>
-          </div>
-          <div class="kv">
-            <div class="label" id="labelSampleSize"></div>
-            <div class="value" id="valueSampleSize"></div>
-          </div>
-          <div class="kv">
-            <div class="label" id="labelTrials"></div>
-            <div class="value" id="valueTrials"></div>
-          </div>
-          <div class="kv">
-            <div class="label" id="labelAlpha"></div>
-            <div class="value" id="valueAlpha"></div>
-          </div>
-          <div class="kv">
-            <div class="label" id="labelClusters"></div>
-            <div class="value" id="valueClusters"></div>
-          </div>
-        </aside>
-
-        <main class="content">
-          <section class="card section">
-            <h2 id="resultTitle"></h2>
-            <div class="result-grid">
-              <div class="metric">
-                <div class="name" id="labelObserved"></div>
-                <div class="num" id="numObserved"></div>
-              </div>
-              <div class="metric">
-                <div class="name" id="labelMissed"></div>
-                <div class="num" id="numMissed"></div>
-              </div>
-              <div class="metric">
-                <div class="name" id="labelObservedRate"></div>
-                <div class="num" id="numObservedRate"></div>
-              </div>
-              <div class="metric">
-                <div class="name" id="labelTheoreticalRate"></div>
-                <div class="num" id="numTheoreticalRate"></div>
-              </div>
-              <div class="metric">
-                <div class="name" id="labelTheoreticalExact"></div>
-                <div class="num" id="numTheoreticalExact"></div>
-              </div>
-              <div class="metric">
-                <div class="name" id="labelXRank"></div>
-                <div class="num" id="numXRank"></div>
-              </div>
+        <div class="hero-grid">
+          <div class="card viz">
+            <canvas id="dots" width="750" height="480"></canvas>
+            <div class="legend">
+              <span class="item"><span class="swatch all"></span><span id="legendAll"></span></span>
+              <span class="item"><span class="swatch x"></span><span id="legendX"></span></span>
+              <span class="item"><span class="swatch sampled"></span><span id="legendSampled"></span></span>
             </div>
+          </div>
+
+          <div class="card panel">
+            <div class="big-stat">
+              <div class="num" id="statNum"></div>
+              <div class="caption" id="statCaption"></div>
+            </div>
+            <div class="verdict" id="verdict"></div>
+            <div class="tally" id="tally"></div>
             <div class="action-row">
-              <button class="btn" id="rerunBtn"></button>
-              <span class="status" id="runStatus"></span>
+              <button class="btn" id="onceBtn"></button>
+              <button class="btn secondary" id="manyBtn"></button>
             </div>
-          </section>
+            <a class="cta" id="ctaPlayground" href="./playground.html"></a>
+          </div>
+        </div>
 
-          <section class="card section">
-            <h2 id="distributionTitle"></h2>
-            <div class="sub" id="chartTopClusters"></div>
-            <div class="legend" id="chartHighlight"></div>
-            <div class="bars" id="bars"></div>
-            <div class="x-rank" id="xRankMessage"></div>
-          </section>
+        <div class="scroll-hint" id="scrollHint"></div>
+      </section>
 
-          <section class="card section">
-            <h2 id="noteTitle"></h2>
-            <p class="note" id="note1"></p>
-            <p class="note" id="note2"></p>
-            <p class="note" id="note3"></p>
-          </section>
-        </main>
+      <div class="explain">
+        <section class="card section">
+          <h2 id="whatTitle"></h2>
+          <p id="whatBody1"></p>
+          <p id="whatBody2"></p>
+        </section>
+
+        <section class="card section">
+          <h2 id="whyTitle"></h2>
+          <p id="whyBody1"></p>
+          <div class="formula">P_miss &asymp; exp(&minus;K &middot; p)&nbsp;&nbsp;(p = n_X / N)</div>
+          <div class="table-wrap">
+            <table id="missTable"></table>
+          </div>
+          <div class="table-note" id="tableNote"></div>
+          <p id="whyBody2"></p>
+        </section>
+
+        <section class="card section">
+          <h2 id="fixTitle"></h2>
+          <p id="fixBody1"></p>
+          <p id="fixBody2"></p>
+        </section>
+
+        <section class="card section">
+          <div class="cta-row">
+            <a class="cta" id="ctaPlayground2" href="./playground.html"></a>
+          </div>
+        </section>
       </div>
+
+      <footer>
+        <a href="https://github.com/nishio/zipf-broadlistening" id="repoLink"></a>
+      </footer>
     </div>
 
     <script id="fallback-content" type="application/json">
       {
-        "title": "{pct}意見の取りこぼし体験",
-        "story_intro": "N={N}件のうち意見Xは{ni}件({pct})。調査リソースがK={K}件しかない時、ランダムサンプリングでどれだけ見落とすかを{T}回試行で確認する。",
-        "sections": {
-          "scenario": "シナリオ",
-          "result": "ランダムサンプリング結果",
-          "distribution": "意見分布 (上位{top}クラスタ)",
-          "note": "比較の見方"
+        "title": "1%意見の取りこぼし体験",
+        "kicker": "ブロードリスニングの数理",
+        "headline": "ランダムに読むと、1%の意見は3回に1回まるごと消える",
+        "lede": "ここに10,000件の声がある。そのうち100件(1%)は意見Xだ。あなたが100件だけランダムに選んで読むとき、意見Xに1件も出会えない確率は約36%ある。",
+        "legend": {
+          "all": "すべての声 (10,000件)",
+          "x": "意見X (100件 = 1%)",
+          "sampled": "ランダムに読んだ100件"
         },
-        "labels": {
-          "population": "母集団 N",
-          "x_count": "意見X件数 n_X",
-          "sample_size": "サンプル件数 K",
-          "trials": "試行回数 T",
-          "alpha": "Zipf alpha",
-          "clusters": "クラスタ数 M_eff",
-          "observed": "X観測あり",
-          "missed": "X観測なし",
-          "observed_rate": "観測確率 (実測)",
-          "theoretical_rate": "観測確率 (理論: 1-exp(-K*n_X/N))",
-          "theoretical_exact": "観測確率 (理論: exact)",
-          "x_rank": "Xの順位"
-        },
-        "chart": {
-          "top_clusters": "件数順で上位{top}クラスタを表示",
-          "highlight_x": "意見Xをハイライト"
+        "stat": {
+          "caption": "意見Xを1件も読めない確率 (理論値)",
+          "verdict_hit": "今回の100件には意見Xが{hits}件入っていた",
+          "verdict_miss": "今回の100件に意見Xは1件もなかった",
+          "tally": "実測: {runs}回読んで、{miss}回は1件も出会えなかった ({pct})"
         },
         "buttons": {
-          "rerun": "{T}回を再実行"
+          "once": "もう一度100件読む",
+          "many": "まとめて100回試す"
         },
-        "messages": {
-          "x_not_in_top": "意見Xは上位{top}に入っていない (rank={rank})",
-          "last_run": "最終実行",
-          "rank_suffix": "位"
+        "cta": {
+          "playground": "パラメータを変えて試す →"
         },
-        "notes": {
-          "line1": "{pct}の意見でも、K={K}のランダム調査では見えない回が多くなる。",
-          "line2": "理論値と実測を並べると、サンプル不足で生じる取りこぼしの大きさが直感的に分かる。",
-          "line3": "URLでシナリオを変更できる: 例 #N=10000&K=100&ni=10&M=200&a=1.00&g=1 (N=母集団, K=サンプル件数, ni=意見X件数, T=試行回数, a=Zipf alpha, M=クラスタ数を固定, g=実在クラスタの最小件数)"
-        }
+        "scroll_hint": "▼ この図の意味",
+        "explain": {
+          "what_title": "この図は何を見ているか",
+          "what_body1": "灰色の点の一つひとつが、パブリックコメントやアンケート自由回答のような「声」1件。赤い点が、全体の1%にあたる意見X。黒い点が、ランダムに選んで実際に読んだ100件。",
+          "what_body2": "黒い点が赤い点に1つも重ならなかった回は、読み手にとって意見Xは「存在しなかった」ことになる。上のボタンで何度でも引き直せる。3回に1回くらいの頻度で、100人分の声がまるごと視界から消える。",
+          "why_title": "なぜ見落とすのか",
+          "why_body1": "割合pの意見をK件のランダムサンプルで1件も引けない確率は、およそ次の式で決まる。",
+          "why_body2": "意見が小さいほど、そして読む件数が少ないほど、見落とし確率は指数的に1に近づく。実際の意見分布はZipf的なロングテール(少数の多数派+大量の小さな意見)なので、ランダムサンプリングは構造的に多数派へ偏る。",
+          "table_header_p": "意見の割合 p",
+          "table_note": "見落とし確率 P_miss ≈ exp(−K·p)。0.1%の意見はK=100でも9割見落とす。",
+          "fix_title": "どうすれば埋没しないのか",
+          "fix_body1": "AIで全件を読み、似た意見をクラスタにまとめてから「クラスタの代表」を観察すると、観察単位が「件数比例」から「意見クラスタ単位」に変わる。件数がN/K以上あるクラスタは、頻度上位K個の中に必ず入る。",
+          "fix_body2": "これがブロードリスニング(AI要約による全件傾聴)の数理的な意味だ。要約が効くのは情報圧縮そのものではなく、マイノリティ意見を確率まかせにしない観察配分を選べるようになるから。下のページで、母集団・サンプル数・意見の割合を変えて確かめられる。"
+        },
+        "footer_repo": "GitHub: nishio/zipf-broadlistening"
       }
     </script>
 
     <script>
       "use strict";
 
-      const DEFAULTS = Object.freeze({
+      const HERO = Object.freeze({
         N: 10000,
         NX: 100,
-        K: 25,
-        T: 100,
-        ALPHA: 1.0,
-        M: null,
-        G: 1,
-        TOP: 25,
-        MAX_RANK: 200000,
-        CONTENT_PATH: "content/ja.json",
+        K: 100,
+        COLS: 125,
+        ROWS: 80,
+        CANVAS_W: 750,
+        CANVAS_H: 480,
+        TABLE_PS: [0.01, 0.001, 0.0001],
+        TABLE_KS: [25, 100, 500, 1000],
+        CONTENT_PATH: "content/ja_landing.json",
       });
 
-      // URL 例: index.html#N=10000&K=100&ni=10&M=200&a=1.00&g=1
-      //   N: 母集団件数 / K: サンプル件数 / ni: 意見Xの件数 n_X / T: 試行回数
-      //   a: Zipf alpha / M: クラスタ数を固定 (省略時は n_r >= g で M_eff を導出)
-      //   g: 実在クラスタとみなす最小件数 (既定 1)
-      function readParams() {
-        const hash = window.location.hash.replace(/^#/, "");
-        const query = window.location.search.replace(/^\?/, "");
-        const params = new URLSearchParams(hash || query);
-
-        const num = (key, fallback, { int = false, min = -Infinity, max = Infinity } = {}) => {
-          const raw = params.get(key);
-          if (raw === null || raw.trim() === "") return fallback;
-          const value = int ? parseInt(raw, 10) : parseFloat(raw);
-          if (!Number.isFinite(value)) return fallback;
-          return Math.min(max, Math.max(min, value));
-        };
-
-        const N = num("N", DEFAULTS.N, { int: true, min: 1, max: 10000000 });
-        const NX = num("ni", DEFAULTS.NX, { int: true, min: 0, max: N });
-        const K = num("K", DEFAULTS.K, { int: true, min: 1, max: N });
-        const T = num("T", DEFAULTS.T, { int: true, min: 1, max: 100000 });
-        const ALPHA = num("a", DEFAULTS.ALPHA, { min: 0.05, max: 5 });
-        const rawM = num("M", 0, { int: true, min: 0, max: DEFAULTS.MAX_RANK });
-        const M = rawM ? Math.max(2, rawM) : DEFAULTS.M;
-        const G = num("g", DEFAULTS.G, { min: 1e-6, max: N });
-
-        return Object.freeze({ ...DEFAULTS, N, NX, K, T, ALPHA, M, G });
-      }
-
-      const CONFIG = readParams();
-
-      const dom = {
-        title: document.getElementById("title"),
-        storyIntro: document.getElementById("storyIntro"),
-        scenarioTitle: document.getElementById("scenarioTitle"),
-        resultTitle: document.getElementById("resultTitle"),
-        distributionTitle: document.getElementById("distributionTitle"),
-        noteTitle: document.getElementById("noteTitle"),
-
-        labelPopulation: document.getElementById("labelPopulation"),
-        labelXCount: document.getElementById("labelXCount"),
-        labelSampleSize: document.getElementById("labelSampleSize"),
-        labelTrials: document.getElementById("labelTrials"),
-        labelAlpha: document.getElementById("labelAlpha"),
-        labelObserved: document.getElementById("labelObserved"),
-        labelMissed: document.getElementById("labelMissed"),
-        labelObservedRate: document.getElementById("labelObservedRate"),
-        labelTheoreticalRate: document.getElementById("labelTheoreticalRate"),
-        labelTheoreticalExact: document.getElementById("labelTheoreticalExact"),
-        labelXRank: document.getElementById("labelXRank"),
-        labelClusters: document.getElementById("labelClusters"),
-
-        valuePopulation: document.getElementById("valuePopulation"),
-        valueXCount: document.getElementById("valueXCount"),
-        valueSampleSize: document.getElementById("valueSampleSize"),
-        valueTrials: document.getElementById("valueTrials"),
-        valueAlpha: document.getElementById("valueAlpha"),
-        valueClusters: document.getElementById("valueClusters"),
-
-        numObserved: document.getElementById("numObserved"),
-        numMissed: document.getElementById("numMissed"),
-        numObservedRate: document.getElementById("numObservedRate"),
-        numTheoreticalRate: document.getElementById("numTheoreticalRate"),
-        numTheoreticalExact: document.getElementById("numTheoreticalExact"),
-        numXRank: document.getElementById("numXRank"),
-
-        rerunBtn: document.getElementById("rerunBtn"),
-        runStatus: document.getElementById("runStatus"),
-
-        chartTopClusters: document.getElementById("chartTopClusters"),
-        chartHighlight: document.getElementById("chartHighlight"),
-        bars: document.getElementById("bars"),
-        xRankMessage: document.getElementById("xRankMessage"),
-
-        note1: document.getElementById("note1"),
-        note2: document.getElementById("note2"),
-        note3: document.getElementById("note3"),
-      };
-
-      function fmtInt(n) {
-        return new Intl.NumberFormat("en-US").format(n);
-      }
-
-      function fmtPct(rate) {
-        return `${(rate * 100).toFixed(1)}%`;
+      const dom = {};
+      for (const id of [
+        "kicker", "headline", "lede",
+        "legendAll", "legendX", "legendSampled",
+        "statNum", "statCaption", "verdict", "tally",
+        "onceBtn", "manyBtn", "ctaPlayground", "ctaPlayground2", "scrollHint",
+        "whatTitle", "whatBody1", "whatBody2",
+        "whyTitle", "whyBody1", "whyBody2", "missTable", "tableNote",
+        "fixTitle", "fixBody1", "fixBody2",
+        "repoLink", "dots",
+      ]) {
+        dom[id] = document.getElementById(id);
       }
 
       function tpl(text, vars) {
         return text.replace(/\{(\w+)\}/g, (match, key) => (key in vars ? String(vars[key]) : match));
       }
 
-      const TPL_VARS = Object.freeze({
-        N: new Intl.NumberFormat("en-US").format(CONFIG.N),
-        ni: new Intl.NumberFormat("en-US").format(CONFIG.NX),
-        K: new Intl.NumberFormat("en-US").format(CONFIG.K),
-        T: new Intl.NumberFormat("en-US").format(CONFIG.T),
-        a: CONFIG.ALPHA.toFixed(2),
-        top: CONFIG.TOP,
-        pct: `${parseFloat(((CONFIG.NX / CONFIG.N) * 100).toFixed(2))}%`,
-      });
-
       function fallbackContent() {
-        const el = document.getElementById("fallback-content");
-        return JSON.parse(el.textContent);
+        return JSON.parse(document.getElementById("fallback-content").textContent);
       }
 
       async function loadContent() {
         try {
-          const res = await fetch(CONFIG.CONTENT_PATH, { cache: "no-store" });
+          const res = await fetch(HERO.CONTENT_PATH, { cache: "no-store" });
           if (!res.ok) throw new Error(`HTTP ${res.status}`);
           return await res.json();
         } catch (_err) {
@@ -542,217 +484,215 @@
         }
       }
 
-      function applyContent(c) {
-        document.title = tpl(c.title, TPL_VARS);
-        dom.title.textContent = tpl(c.title, TPL_VARS);
-        dom.storyIntro.textContent = tpl(c.story_intro, TPL_VARS);
-
-        dom.scenarioTitle.textContent = c.sections.scenario;
-        dom.resultTitle.textContent = c.sections.result;
-        dom.distributionTitle.textContent = tpl(c.sections.distribution, TPL_VARS);
-        dom.noteTitle.textContent = c.sections.note;
-
-        dom.labelPopulation.textContent = c.labels.population;
-        dom.labelXCount.textContent = c.labels.x_count;
-        dom.labelSampleSize.textContent = c.labels.sample_size;
-        dom.labelTrials.textContent = c.labels.trials;
-        dom.labelAlpha.textContent = c.labels.alpha;
-
-        dom.labelObserved.textContent = c.labels.observed;
-        dom.labelMissed.textContent = c.labels.missed;
-        dom.labelObservedRate.textContent = c.labels.observed_rate;
-        dom.labelTheoreticalRate.textContent = c.labels.theoretical_rate;
-        dom.labelTheoreticalExact.textContent = c.labels.theoretical_exact;
-        dom.labelXRank.textContent = c.labels.x_rank;
-        dom.labelClusters.textContent = c.labels.clusters;
-
-        dom.chartTopClusters.textContent = tpl(c.chart.top_clusters, TPL_VARS);
-        dom.chartHighlight.innerHTML = `${c.chart.highlight_x}<span class="tag">X</span>`;
-
-        dom.rerunBtn.textContent = tpl(c.buttons.rerun, TPL_VARS);
-        dom.note1.textContent = tpl(c.notes.line1, TPL_VARS);
-        dom.note2.textContent = tpl(c.notes.line2, TPL_VARS);
-        dom.note3.textContent = tpl(c.notes.line3, TPL_VARS);
-      }
-
-      // CONFIG.M は意見Xを含むクラスタ総数なので、X以外の分布には M-1 個を割り当てる
-      function findMEffAndC(total, alpha, maxRank) {
-        const cap = CONFIG.M ? Math.min(CONFIG.M - 1, maxRank) : maxRank;
-        let harmonic = 0;
-        for (let m = 1; m <= cap; m++) {
-          harmonic += 1 / Math.pow(m, alpha);
-          const c = total / harmonic;
-          if (CONFIG.M && m === cap) return { mEff: m, c };
-          const next = c / Math.pow(m + 1, alpha);
-          if (next < CONFIG.G) return { mEff: m, c };
-        }
-        throw new Error(`Failed to find M_eff within ${maxRank}`);
-      }
-
-      function buildZipfCounts(total, alpha) {
-        if (total <= 0) return [];
-        const { mEff, c } = findMEffAndC(total, alpha, CONFIG.MAX_RANK);
-        const raw = [];
-        const counts = [];
-        const fracs = [];
-
-        let used = 0;
-        for (let r = 1; r <= mEff; r++) {
-          const value = c / Math.pow(r, alpha);
-          raw.push(value);
-          const base = Math.floor(value);
-          counts.push(base);
-          fracs.push(value - base);
-          used += base;
-        }
-
-        let rest = total - used;
-        const order = [...fracs.keys()].sort((a, b) => fracs[b] - fracs[a]);
-        for (let i = 0; i < rest; i++) {
-          counts[order[i % order.length]] += 1;
-        }
-
-        return counts.map((count, idx) => ({ id: `O${idx + 1}`, count }));
-      }
-
-      function buildDistribution() {
-        const others = buildZipfCounts(CONFIG.N - CONFIG.NX, CONFIG.ALPHA);
-        const all = [{ id: "X", count: CONFIG.NX }, ...others];
-        all.sort((a, b) => b.count - a.count);
-
-        const xRank = all.findIndex((item) => item.id === "X") + 1;
-        const top = all.slice(0, CONFIG.TOP).map((item, idx) => ({
-          rank: idx + 1,
-          id: item.id,
-          count: item.count,
-          isX: item.id === "X",
-        }));
-
-        return { all, top, xRank };
-      }
-
-      function runOneTrial() {
-        let remainingN = CONFIG.N;
-        let remainingX = CONFIG.NX;
-
-        for (let i = 0; i < CONFIG.K; i++) {
-          if (remainingX <= 0) return false;
-          if (Math.random() < remainingX / remainingN) return true;
-          remainingN -= 1;
-        }
-
-        return false;
-      }
-
-      function runSampling() {
-        let observed = 0;
-        for (let t = 0; t < CONFIG.T; t++) {
-          if (runOneTrial()) observed += 1;
-        }
-        const missed = CONFIG.T - observed;
-        return { observed, missed, observedRate: observed / CONFIG.T };
-      }
-
-      function theoreticalApproxRate() {
-        return 1 - Math.exp((-CONFIG.K * CONFIG.NX) / CONFIG.N);
-      }
-
-      function theoreticalExactRate() {
+      function exactMissRate() {
         let miss = 1;
-        for (let i = 0; i < CONFIG.K; i++) {
-          miss *= (CONFIG.N - CONFIG.NX - i) / (CONFIG.N - i);
+        for (let i = 0; i < HERO.K; i++) {
+          miss *= (HERO.N - HERO.NX - i) / (HERO.N - i);
         }
-        return 1 - miss;
+        return miss;
       }
 
-      function renderDistribution(distribution, content) {
-        dom.bars.innerHTML = "";
-
-        const maxCount = distribution.top.length > 0
-          ? Math.max(...distribution.top.map((d) => d.count))
-          : 1;
-
-        for (const row of distribution.top) {
-          const el = document.createElement("div");
-          el.className = `bar-row${row.isX ? " x" : ""}`;
-
-          const label = document.createElement("div");
-          label.className = "label";
-          label.textContent = `${row.rank}. ${row.id}`;
-
-          const track = document.createElement("div");
-          track.className = "bar-track";
-          const fill = document.createElement("div");
-          fill.className = "bar-fill";
-          fill.style.width = `${(row.count / maxCount) * 100}%`;
-          track.appendChild(fill);
-
-          const count = document.createElement("div");
-          count.className = "count";
-          count.textContent = fmtInt(row.count);
-
-          el.appendChild(label);
-          el.appendChild(track);
-          el.appendChild(count);
-
-          dom.bars.appendChild(el);
+      // ---- dot field ----
+      const xSet = new Set();
+      {
+        const idx = [...Array(HERO.N).keys()];
+        for (let i = idx.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [idx[i], idx[j]] = [idx[j], idx[i]];
         }
+        for (let i = 0; i < HERO.NX; i++) xSet.add(idx[i]);
+      }
 
-        if (distribution.xRank > CONFIG.TOP) {
-          dom.xRankMessage.textContent = tpl(content.messages.x_not_in_top, {
-            ...TPL_VARS,
-            rank: distribution.xRank,
-          });
+      const ctx = dom.dots.getContext("2d");
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      dom.dots.width = HERO.CANVAS_W * dpr;
+      dom.dots.height = HERO.CANVAS_H * dpr;
+      ctx.scale(dpr, dpr);
+
+      const pitchX = HERO.CANVAS_W / HERO.COLS;
+      const pitchY = HERO.CANVAS_H / HERO.ROWS;
+
+      function dotPos(i) {
+        const col = i % HERO.COLS;
+        const row = Math.floor(i / HERO.COLS);
+        return { x: (col + 0.5) * pitchX, y: (row + 0.5) * pitchY };
+      }
+
+      function drawDot(i, style) {
+        const { x, y } = dotPos(i);
+        ctx.beginPath();
+        if (style === "sampledX") {
+          ctx.fillStyle = "#b4382d";
+          ctx.arc(x, y, 3.4, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.beginPath();
+          ctx.strokeStyle = "#182021";
+          ctx.lineWidth = 1.4;
+          ctx.arc(x, y, 5.0, 0, Math.PI * 2);
+          ctx.stroke();
+          return;
+        }
+        if (style === "sampled") {
+          ctx.fillStyle = "#182021";
+          ctx.arc(x, y, 2.4, 0, Math.PI * 2);
+          ctx.fill();
+          return;
+        }
+        ctx.fillStyle = style === "x" ? "#b4382d" : "#cfc8b8";
+        ctx.arc(x, y, style === "x" ? 2.2 : 1.7, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      function drawBase() {
+        ctx.clearRect(0, 0, HERO.CANVAS_W, HERO.CANVAS_H);
+        for (let i = 0; i < HERO.N; i++) {
+          drawDot(i, xSet.has(i) ? "x" : "base");
+        }
+      }
+
+      function pickSample() {
+        const chosen = new Set();
+        while (chosen.size < HERO.K) {
+          chosen.add(Math.floor(Math.random() * HERO.N));
+        }
+        return [...chosen];
+      }
+
+      // ---- state ----
+      let content = null;
+      let runs = 0;
+      let misses = 0;
+      let animating = false;
+
+      function renderTally() {
+        if (runs === 0) {
+          dom.tally.textContent = "";
+          return;
+        }
+        dom.tally.textContent = tpl(content.stat.tally, {
+          runs,
+          miss: misses,
+          pct: `${((misses / runs) * 100).toFixed(0)}%`,
+        });
+      }
+
+      function renderVerdict(hits) {
+        if (hits === 0) {
+          dom.verdict.className = "verdict miss";
+          dom.verdict.textContent = content.stat.verdict_miss;
         } else {
-          dom.xRankMessage.textContent = "";
+          dom.verdict.className = "verdict hit";
+          dom.verdict.textContent = tpl(content.stat.verdict_hit, { hits });
         }
       }
 
-      function renderScenario() {
-        dom.valuePopulation.textContent = fmtInt(CONFIG.N);
-        dom.valueXCount.textContent = fmtInt(CONFIG.NX);
-        dom.valueSampleSize.textContent = fmtInt(CONFIG.K);
-        dom.valueTrials.textContent = fmtInt(CONFIG.T);
-        dom.valueAlpha.textContent = CONFIG.ALPHA.toFixed(2);
+      function sampleOnce() {
+        if (animating) return;
+        animating = true;
+        drawBase();
+        dom.verdict.className = "verdict";
+        dom.verdict.textContent = "";
+
+        const sample = pickSample();
+        const hits = sample.filter((i) => xSet.has(i)).length;
+        let cursor = 0;
+
+        function step() {
+          const batch = 6;
+          for (let b = 0; b < batch && cursor < sample.length; b++, cursor++) {
+            const i = sample[cursor];
+            drawDot(i, xSet.has(i) ? "sampledX" : "sampled");
+          }
+          if (cursor < sample.length) {
+            requestAnimationFrame(step);
+          } else {
+            runs += 1;
+            if (hits === 0) misses += 1;
+            renderVerdict(hits);
+            renderTally();
+            animating = false;
+          }
+        }
+        requestAnimationFrame(step);
       }
 
-      function renderResults(result, xRank, content) {
-        const approx = theoreticalApproxRate();
-        const exact = theoreticalExactRate();
-
-        dom.numObserved.textContent = `${fmtInt(result.observed)} / ${fmtInt(CONFIG.T)}`;
-        dom.numMissed.textContent = `${fmtInt(result.missed)} / ${fmtInt(CONFIG.T)}`;
-        dom.numObservedRate.textContent = fmtPct(result.observedRate);
-        dom.numTheoreticalRate.textContent = fmtPct(approx);
-        dom.numTheoreticalExact.textContent = fmtPct(exact);
-        dom.numXRank.textContent = `${xRank} ${content.messages.rank_suffix}`;
+      function runMany() {
+        if (animating) return;
+        let lastSample = null;
+        for (let t = 0; t < 100; t++) {
+          const sample = pickSample();
+          const hits = sample.filter((i) => xSet.has(i)).length;
+          runs += 1;
+          if (hits === 0) misses += 1;
+          lastSample = { sample, hits };
+        }
+        drawBase();
+        for (const i of lastSample.sample) {
+          drawDot(i, xSet.has(i) ? "sampledX" : "sampled");
+        }
+        renderVerdict(lastSample.hits);
+        renderTally();
       }
 
-      function timeStamp() {
-        const now = new Date();
-        return now.toLocaleTimeString("ja-JP", { hour12: false });
+      function buildTable() {
+        const fmtP = (p) => `${parseFloat((p * 100).toFixed(2))}%`;
+        let html = `<tr><th>${content.explain.table_header_p}</th>`;
+        for (const k of HERO.TABLE_KS) html += `<th>K=${k}</th>`;
+        html += "</tr>";
+        for (const p of HERO.TABLE_PS) {
+          html += `<tr><th>${fmtP(p)}</th>`;
+          for (const k of HERO.TABLE_KS) {
+            const miss = Math.exp(-k * p);
+            const cls = miss >= 0.5 ? ' class="danger"' : "";
+            html += `<td${cls}>${(miss * 100).toFixed(1)}%</td>`;
+          }
+          html += "</tr>";
+        }
+        dom.missTable.innerHTML = html;
+      }
+
+      function applyContent(c) {
+        document.title = c.title;
+        dom.kicker.textContent = c.kicker;
+        dom.headline.textContent = c.headline;
+        dom.lede.textContent = c.lede;
+
+        dom.legendAll.textContent = c.legend.all;
+        dom.legendX.textContent = c.legend.x;
+        dom.legendSampled.textContent = c.legend.sampled;
+
+        dom.statNum.textContent = `${(exactMissRate() * 100).toFixed(1)}%`;
+        dom.statCaption.textContent = c.stat.caption;
+
+        dom.onceBtn.textContent = c.buttons.once;
+        dom.manyBtn.textContent = c.buttons.many;
+        dom.ctaPlayground.textContent = c.cta.playground;
+        dom.ctaPlayground2.textContent = c.cta.playground;
+        dom.scrollHint.textContent = c.scroll_hint;
+
+        dom.whatTitle.textContent = c.explain.what_title;
+        dom.whatBody1.textContent = c.explain.what_body1;
+        dom.whatBody2.textContent = c.explain.what_body2;
+        dom.whyTitle.textContent = c.explain.why_title;
+        dom.whyBody1.textContent = c.explain.why_body1;
+        dom.whyBody2.textContent = c.explain.why_body2;
+        dom.tableNote.textContent = c.explain.table_note;
+        dom.fixTitle.textContent = c.explain.fix_title;
+        dom.fixBody1.textContent = c.explain.fix_body1;
+        dom.fixBody2.textContent = c.explain.fix_body2;
+
+        dom.repoLink.textContent = c.footer_repo;
       }
 
       async function main() {
-        const content = await loadContent();
+        content = await loadContent();
         applyContent(content);
-
-        const distribution = buildDistribution();
-        renderScenario();
-        dom.valueClusters.textContent = fmtInt(distribution.all.length);
-        renderDistribution(distribution, content);
-
-        function rerun() {
-          const result = runSampling();
-          renderResults(result, distribution.xRank, content);
-          dom.runStatus.textContent = `${content.messages.last_run}: ${timeStamp()}`;
-        }
-
-        dom.rerunBtn.addEventListener("click", rerun);
-        rerun();
+        buildTable();
+        drawBase();
+        dom.onceBtn.addEventListener("click", sampleOnce);
+        dom.manyBtn.addEventListener("click", runMany);
+        sampleOnce();
       }
-
-      window.addEventListener("hashchange", () => window.location.reload());
 
       main();
     </script>

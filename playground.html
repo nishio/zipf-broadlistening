@@ -1,0 +1,893 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>1%意見の取りこぼし体験</title>
+    <style>
+      :root {
+        --bg0: #f6efe3;
+        --bg1: #eee3d3;
+        --ink: #182021;
+        --muted: #5d5a52;
+        --card: rgba(255, 255, 255, 0.72);
+        --card-border: rgba(8, 12, 16, 0.12);
+        --shadow: rgba(0, 0, 0, 0.08);
+        --accent: #0e6f63;
+        --accent-2: #c05f2f;
+        --x: #b4382d;
+        --bar: #9ca4a5;
+        --font-main: "Hiragino Mincho ProN", "Yu Mincho", "BIZ UDPMincho", Georgia, serif;
+        --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        color: var(--ink);
+        font-family: var(--font-main);
+        background:
+          radial-gradient(900px 560px at 12% -20%, rgba(14, 111, 99, 0.18), transparent 60%),
+          radial-gradient(680px 460px at 110% 10%, rgba(192, 95, 47, 0.15), transparent 58%),
+          linear-gradient(180deg, var(--bg0), var(--bg1));
+      }
+
+      .page {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 24px 18px 42px;
+      }
+
+      .hero {
+        margin-bottom: 14px;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: clamp(24px, 3vw, 34px);
+        letter-spacing: 0.4px;
+      }
+
+      .intro {
+        margin-top: 8px;
+        max-width: 70ch;
+        font-size: 15px;
+        line-height: 1.55;
+        color: var(--muted);
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: 340px 1fr;
+        gap: 14px;
+      }
+
+      .card {
+        background: var(--card);
+        border: 1px solid var(--card-border);
+        border-radius: 16px;
+        box-shadow: 0 14px 32px var(--shadow);
+        backdrop-filter: blur(6px);
+      }
+
+      .panel {
+        padding: 14px;
+      }
+
+      .panel h2 {
+        margin: 0 0 12px;
+        font-size: 14px;
+        text-transform: uppercase;
+        letter-spacing: 0.9px;
+        color: var(--muted);
+      }
+
+      .kv {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 8px;
+        align-items: baseline;
+        border-bottom: 1px dashed rgba(0, 0, 0, 0.12);
+        padding: 9px 2px;
+      }
+
+      .kv:last-child {
+        border-bottom: 0;
+      }
+
+      .kv .label {
+        font-size: 14px;
+        color: var(--muted);
+      }
+
+      .kv .value {
+        font-family: var(--font-mono);
+        font-size: 14px;
+        font-variant-numeric: tabular-nums;
+        background: rgba(14, 111, 99, 0.09);
+        border: 1px solid rgba(14, 111, 99, 0.25);
+        border-radius: 999px;
+        padding: 2px 8px;
+        white-space: nowrap;
+      }
+
+      .content {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 14px;
+      }
+
+      .section {
+        padding: 15px 16px;
+      }
+
+      .section h2 {
+        margin: 0;
+        font-size: 18px;
+      }
+
+      .sub {
+        margin-top: 6px;
+        font-size: 13px;
+        color: var(--muted);
+      }
+
+      .result-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+        margin-top: 12px;
+      }
+
+      .metric {
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        background: rgba(255, 255, 255, 0.62);
+        border-radius: 12px;
+        padding: 10px;
+      }
+
+      .metric .name {
+        font-size: 12px;
+        color: var(--muted);
+      }
+
+      .metric .num {
+        margin-top: 5px;
+        font-family: var(--font-mono);
+        font-size: 18px;
+        font-variant-numeric: tabular-nums;
+      }
+
+      .action-row {
+        margin-top: 12px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .btn {
+        appearance: none;
+        border: 1px solid rgba(0, 0, 0, 0.2);
+        background: rgba(14, 111, 99, 0.12);
+        color: var(--ink);
+        border-radius: 999px;
+        padding: 8px 14px;
+        font-size: 14px;
+        font-family: var(--font-main);
+        cursor: pointer;
+      }
+
+      .btn:hover {
+        filter: brightness(0.98);
+      }
+
+      .status {
+        font-size: 12px;
+        color: var(--muted);
+      }
+
+      .legend {
+        margin-top: 10px;
+        font-size: 13px;
+        color: var(--muted);
+      }
+
+      .legend .tag {
+        display: inline-block;
+        font-family: var(--font-mono);
+        border: 1px solid rgba(0, 0, 0, 0.15);
+        border-radius: 999px;
+        padding: 2px 8px;
+        margin-left: 8px;
+        background: rgba(180, 56, 45, 0.11);
+      }
+
+      .bars {
+        margin-top: 12px;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 6px;
+      }
+
+      .bar-row {
+        display: grid;
+        grid-template-columns: 66px 1fr 72px;
+        gap: 8px;
+        align-items: center;
+        font-family: var(--font-mono);
+        font-size: 12px;
+      }
+
+      .bar-row .label {
+        color: var(--muted);
+        white-space: nowrap;
+      }
+
+      .bar-track {
+        height: 18px;
+        border-radius: 999px;
+        background: rgba(0, 0, 0, 0.07);
+        overflow: hidden;
+        border: 1px solid rgba(0, 0, 0, 0.08);
+      }
+
+      .bar-fill {
+        height: 100%;
+        width: 0;
+        background: linear-gradient(90deg, #8e9a9b, #7f8889);
+        border-radius: inherit;
+      }
+
+      .bar-row.x .bar-fill {
+        background: linear-gradient(90deg, #ce5f52, #b4382d);
+      }
+
+      .bar-row .count {
+        text-align: right;
+        font-variant-numeric: tabular-nums;
+      }
+
+      .x-rank {
+        margin-top: 10px;
+        font-family: var(--font-mono);
+        font-size: 13px;
+        color: var(--muted);
+      }
+
+      .note {
+        margin-top: 8px;
+        font-size: 14px;
+        color: var(--muted);
+        line-height: 1.5;
+      }
+
+      @media (max-width: 920px) {
+        .grid {
+          grid-template-columns: 1fr;
+        }
+
+        .result-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+      .back-link {
+        display: inline-block;
+        margin-bottom: 6px;
+        font-size: 13px;
+        color: var(--accent);
+        text-decoration: none;
+        border-bottom: 1px dashed var(--accent);
+      }
+
+      .back-link:hover {
+        border-bottom-style: solid;
+      }
+
+      .form-title {
+        margin: 18px 0 10px;
+        font-size: 14px;
+        text-transform: uppercase;
+        letter-spacing: 0.9px;
+        color: var(--muted);
+        border-top: 1px dashed rgba(0, 0, 0, 0.12);
+        padding-top: 14px;
+      }
+
+      .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+      }
+
+      .field {
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+        font-size: 12px;
+        color: var(--muted);
+      }
+
+      .field input {
+        width: 100%;
+        padding: 6px 8px;
+        border: 1px solid var(--card-border);
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.85);
+        color: var(--ink);
+        font-family: var(--font-mono);
+        font-size: 13px;
+      }
+
+      .field input:focus {
+        outline: 2px solid rgba(14, 111, 99, 0.35);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <header class="hero">
+        <a class="back-link" id="backLink" href="./index.html"></a>
+        <h1 id="title"></h1>
+        <p class="intro" id="storyIntro"></p>
+      </header>
+
+      <div class="grid">
+        <aside class="card panel">
+          <h2 id="scenarioTitle"></h2>
+
+          <div class="kv">
+            <div class="label" id="labelPopulation"></div>
+            <div class="value" id="valuePopulation"></div>
+          </div>
+          <div class="kv">
+            <div class="label" id="labelXCount"></div>
+            <div class="value" id="valueXCount"></div>
+          </div>
+          <div class="kv">
+            <div class="label" id="labelSampleSize"></div>
+            <div class="value" id="valueSampleSize"></div>
+          </div>
+          <div class="kv">
+            <div class="label" id="labelTrials"></div>
+            <div class="value" id="valueTrials"></div>
+          </div>
+          <div class="kv">
+            <div class="label" id="labelAlpha"></div>
+            <div class="value" id="valueAlpha"></div>
+          </div>
+          <div class="kv">
+            <div class="label" id="labelClusters"></div>
+            <div class="value" id="valueClusters"></div>
+          </div>
+
+          <h2 class="form-title" id="paramsTitle"></h2>
+          <div class="form-grid">
+            <label class="field"><span id="formLabelN"></span><input id="inputN" type="number" min="1" step="1" /></label>
+            <label class="field"><span id="formLabelNi"></span><input id="inputNi" type="number" min="0" step="1" /></label>
+            <label class="field"><span id="formLabelK"></span><input id="inputK" type="number" min="1" step="1" /></label>
+            <label class="field"><span id="formLabelT"></span><input id="inputT" type="number" min="1" step="1" /></label>
+            <label class="field"><span id="formLabelA"></span><input id="inputA" type="number" min="0.05" max="5" step="0.05" /></label>
+            <label class="field"><span id="formLabelM"></span><input id="inputM" type="number" min="2" step="1" placeholder="auto" /></label>
+            <label class="field"><span id="formLabelG"></span><input id="inputG" type="number" min="0" step="1" /></label>
+          </div>
+          <div class="action-row">
+            <button class="btn" id="applyBtn"></button>
+          </div>
+        </aside>
+
+        <main class="content">
+          <section class="card section">
+            <h2 id="resultTitle"></h2>
+            <div class="result-grid">
+              <div class="metric">
+                <div class="name" id="labelObserved"></div>
+                <div class="num" id="numObserved"></div>
+              </div>
+              <div class="metric">
+                <div class="name" id="labelMissed"></div>
+                <div class="num" id="numMissed"></div>
+              </div>
+              <div class="metric">
+                <div class="name" id="labelObservedRate"></div>
+                <div class="num" id="numObservedRate"></div>
+              </div>
+              <div class="metric">
+                <div class="name" id="labelTheoreticalRate"></div>
+                <div class="num" id="numTheoreticalRate"></div>
+              </div>
+              <div class="metric">
+                <div class="name" id="labelTheoreticalExact"></div>
+                <div class="num" id="numTheoreticalExact"></div>
+              </div>
+              <div class="metric">
+                <div class="name" id="labelXRank"></div>
+                <div class="num" id="numXRank"></div>
+              </div>
+            </div>
+            <div class="action-row">
+              <button class="btn" id="rerunBtn"></button>
+              <span class="status" id="runStatus"></span>
+            </div>
+          </section>
+
+          <section class="card section">
+            <h2 id="distributionTitle"></h2>
+            <div class="sub" id="chartTopClusters"></div>
+            <div class="legend" id="chartHighlight"></div>
+            <div class="bars" id="bars"></div>
+            <div class="x-rank" id="xRankMessage"></div>
+          </section>
+
+          <section class="card section">
+            <h2 id="noteTitle"></h2>
+            <p class="note" id="note1"></p>
+            <p class="note" id="note2"></p>
+            <p class="note" id="note3"></p>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <script id="fallback-content" type="application/json">
+      {
+        "title": "{pct}意見の取りこぼし実験室",
+        "story_intro": "N={N}件のうち意見Xは{ni}件({pct})。調査リソースがK={K}件しかない時、ランダムサンプリングでどれだけ見落とすかを{T}回試行で確認する。",
+        "sections": {
+          "scenario": "シナリオ",
+          "params": "パラメータを変える",
+          "result": "ランダムサンプリング結果",
+          "distribution": "意見分布 (上位{top}クラスタ)",
+          "note": "比較の見方"
+        },
+        "labels": {
+          "population": "母集団 N",
+          "x_count": "意見X件数 n_X",
+          "sample_size": "サンプル件数 K",
+          "trials": "試行回数 T",
+          "alpha": "Zipf alpha",
+          "clusters": "クラスタ数 M_eff",
+          "observed": "X観測あり",
+          "missed": "X観測なし",
+          "observed_rate": "観測確率 (実測)",
+          "theoretical_rate": "観測確率 (理論: 1-exp(-K*n_X/N))",
+          "theoretical_exact": "観測確率 (理論: exact)",
+          "x_rank": "Xの順位",
+          "m_fixed": "クラスタ数固定 M (空欄=自動)",
+          "g_min": "最小クラスタ件数 g"
+        },
+        "chart": {
+          "top_clusters": "件数順で上位{top}クラスタを表示",
+          "highlight_x": "意見Xをハイライト"
+        },
+        "buttons": {
+          "rerun": "{T}回を再実行",
+          "apply": "この条件で再計算"
+        },
+        "links": {
+          "back": "← 解説ページに戻る"
+        },
+        "messages": {
+          "x_not_in_top": "意見Xは上位{top}に入っていない (rank={rank})",
+          "last_run": "最終実行",
+          "rank_suffix": "位"
+        },
+        "notes": {
+          "line1": "{pct}の意見でも、K={K}のランダム調査では見えない回が多くなる。",
+          "line2": "理論値と実測を並べると、サンプル不足で生じる取りこぼしの大きさが直感的に分かる。",
+          "line3": "URLでもシナリオを指定できる: 例 #N=10000&K=100&ni=10&M=200&a=1.00&g=1 (N=母集団, K=サンプル件数, ni=意見X件数, T=試行回数, a=Zipf alpha, M=クラスタ数を固定, g=実在クラスタの最小件数)"
+        }
+      }
+    </script>
+
+    <script>
+      "use strict";
+
+      const DEFAULTS = Object.freeze({
+        N: 10000,
+        NX: 100,
+        K: 25,
+        T: 100,
+        ALPHA: 1.0,
+        M: null,
+        G: 1,
+        TOP: 25,
+        MAX_RANK: 200000,
+        CONTENT_PATH: "content/ja.json",
+      });
+
+      // URL 例: index.html#N=10000&K=100&ni=10&M=200&a=1.00&g=1
+      //   N: 母集団件数 / K: サンプル件数 / ni: 意見Xの件数 n_X / T: 試行回数
+      //   a: Zipf alpha / M: クラスタ数を固定 (省略時は n_r >= g で M_eff を導出)
+      //   g: 実在クラスタとみなす最小件数 (既定 1)
+      function readParams() {
+        const hash = window.location.hash.replace(/^#/, "");
+        const query = window.location.search.replace(/^\?/, "");
+        const params = new URLSearchParams(hash || query);
+
+        const num = (key, fallback, { int = false, min = -Infinity, max = Infinity } = {}) => {
+          const raw = params.get(key);
+          if (raw === null || raw.trim() === "") return fallback;
+          const value = int ? parseInt(raw, 10) : parseFloat(raw);
+          if (!Number.isFinite(value)) return fallback;
+          return Math.min(max, Math.max(min, value));
+        };
+
+        const N = num("N", DEFAULTS.N, { int: true, min: 1, max: 10000000 });
+        const NX = num("ni", DEFAULTS.NX, { int: true, min: 0, max: N });
+        const K = num("K", DEFAULTS.K, { int: true, min: 1, max: N });
+        const T = num("T", DEFAULTS.T, { int: true, min: 1, max: 100000 });
+        const ALPHA = num("a", DEFAULTS.ALPHA, { min: 0.05, max: 5 });
+        const rawM = num("M", 0, { int: true, min: 0, max: DEFAULTS.MAX_RANK });
+        const M = rawM ? Math.max(2, rawM) : DEFAULTS.M;
+        const G = num("g", DEFAULTS.G, { min: 1e-6, max: N });
+
+        return Object.freeze({ ...DEFAULTS, N, NX, K, T, ALPHA, M, G });
+      }
+
+      const CONFIG = readParams();
+
+      const dom = {
+        title: document.getElementById("title"),
+        storyIntro: document.getElementById("storyIntro"),
+        scenarioTitle: document.getElementById("scenarioTitle"),
+        resultTitle: document.getElementById("resultTitle"),
+        distributionTitle: document.getElementById("distributionTitle"),
+        noteTitle: document.getElementById("noteTitle"),
+
+        labelPopulation: document.getElementById("labelPopulation"),
+        labelXCount: document.getElementById("labelXCount"),
+        labelSampleSize: document.getElementById("labelSampleSize"),
+        labelTrials: document.getElementById("labelTrials"),
+        labelAlpha: document.getElementById("labelAlpha"),
+        labelObserved: document.getElementById("labelObserved"),
+        labelMissed: document.getElementById("labelMissed"),
+        labelObservedRate: document.getElementById("labelObservedRate"),
+        labelTheoreticalRate: document.getElementById("labelTheoreticalRate"),
+        labelTheoreticalExact: document.getElementById("labelTheoreticalExact"),
+        labelXRank: document.getElementById("labelXRank"),
+        labelClusters: document.getElementById("labelClusters"),
+
+        valuePopulation: document.getElementById("valuePopulation"),
+        valueXCount: document.getElementById("valueXCount"),
+        valueSampleSize: document.getElementById("valueSampleSize"),
+        valueTrials: document.getElementById("valueTrials"),
+        valueAlpha: document.getElementById("valueAlpha"),
+        valueClusters: document.getElementById("valueClusters"),
+
+        numObserved: document.getElementById("numObserved"),
+        numMissed: document.getElementById("numMissed"),
+        numObservedRate: document.getElementById("numObservedRate"),
+        numTheoreticalRate: document.getElementById("numTheoreticalRate"),
+        numTheoreticalExact: document.getElementById("numTheoreticalExact"),
+        numXRank: document.getElementById("numXRank"),
+
+        rerunBtn: document.getElementById("rerunBtn"),
+        runStatus: document.getElementById("runStatus"),
+
+        chartTopClusters: document.getElementById("chartTopClusters"),
+        chartHighlight: document.getElementById("chartHighlight"),
+        bars: document.getElementById("bars"),
+        xRankMessage: document.getElementById("xRankMessage"),
+
+        note1: document.getElementById("note1"),
+        note2: document.getElementById("note2"),
+        note3: document.getElementById("note3"),
+
+        backLink: document.getElementById("backLink"),
+        paramsTitle: document.getElementById("paramsTitle"),
+        formLabelN: document.getElementById("formLabelN"),
+        formLabelNi: document.getElementById("formLabelNi"),
+        formLabelK: document.getElementById("formLabelK"),
+        formLabelT: document.getElementById("formLabelT"),
+        formLabelA: document.getElementById("formLabelA"),
+        formLabelM: document.getElementById("formLabelM"),
+        formLabelG: document.getElementById("formLabelG"),
+        inputN: document.getElementById("inputN"),
+        inputNi: document.getElementById("inputNi"),
+        inputK: document.getElementById("inputK"),
+        inputT: document.getElementById("inputT"),
+        inputA: document.getElementById("inputA"),
+        inputM: document.getElementById("inputM"),
+        inputG: document.getElementById("inputG"),
+        applyBtn: document.getElementById("applyBtn"),
+      };
+
+      function fmtInt(n) {
+        return new Intl.NumberFormat("en-US").format(n);
+      }
+
+      function fmtPct(rate) {
+        return `${(rate * 100).toFixed(1)}%`;
+      }
+
+      function tpl(text, vars) {
+        return text.replace(/\{(\w+)\}/g, (match, key) => (key in vars ? String(vars[key]) : match));
+      }
+
+      const TPL_VARS = Object.freeze({
+        N: new Intl.NumberFormat("en-US").format(CONFIG.N),
+        ni: new Intl.NumberFormat("en-US").format(CONFIG.NX),
+        K: new Intl.NumberFormat("en-US").format(CONFIG.K),
+        T: new Intl.NumberFormat("en-US").format(CONFIG.T),
+        a: CONFIG.ALPHA.toFixed(2),
+        top: CONFIG.TOP,
+        pct: `${parseFloat(((CONFIG.NX / CONFIG.N) * 100).toFixed(2))}%`,
+      });
+
+      function fallbackContent() {
+        const el = document.getElementById("fallback-content");
+        return JSON.parse(el.textContent);
+      }
+
+      async function loadContent() {
+        try {
+          const res = await fetch(CONFIG.CONTENT_PATH, { cache: "no-store" });
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+          return await res.json();
+        } catch (_err) {
+          return fallbackContent();
+        }
+      }
+
+      function applyContent(c) {
+        document.title = tpl(c.title, TPL_VARS);
+        dom.title.textContent = tpl(c.title, TPL_VARS);
+        dom.storyIntro.textContent = tpl(c.story_intro, TPL_VARS);
+
+        dom.scenarioTitle.textContent = c.sections.scenario;
+        dom.resultTitle.textContent = c.sections.result;
+        dom.distributionTitle.textContent = tpl(c.sections.distribution, TPL_VARS);
+        dom.noteTitle.textContent = c.sections.note;
+
+        dom.labelPopulation.textContent = c.labels.population;
+        dom.labelXCount.textContent = c.labels.x_count;
+        dom.labelSampleSize.textContent = c.labels.sample_size;
+        dom.labelTrials.textContent = c.labels.trials;
+        dom.labelAlpha.textContent = c.labels.alpha;
+
+        dom.labelObserved.textContent = c.labels.observed;
+        dom.labelMissed.textContent = c.labels.missed;
+        dom.labelObservedRate.textContent = c.labels.observed_rate;
+        dom.labelTheoreticalRate.textContent = c.labels.theoretical_rate;
+        dom.labelTheoreticalExact.textContent = c.labels.theoretical_exact;
+        dom.labelXRank.textContent = c.labels.x_rank;
+        dom.labelClusters.textContent = c.labels.clusters;
+
+        dom.chartTopClusters.textContent = tpl(c.chart.top_clusters, TPL_VARS);
+        dom.chartHighlight.innerHTML = `${c.chart.highlight_x}<span class="tag">X</span>`;
+
+        dom.rerunBtn.textContent = tpl(c.buttons.rerun, TPL_VARS);
+        dom.note1.textContent = tpl(c.notes.line1, TPL_VARS);
+        dom.note2.textContent = tpl(c.notes.line2, TPL_VARS);
+        dom.note3.textContent = tpl(c.notes.line3, TPL_VARS);
+
+        dom.backLink.textContent = c.links.back;
+        dom.paramsTitle.textContent = c.sections.params;
+        dom.formLabelN.textContent = c.labels.population;
+        dom.formLabelNi.textContent = c.labels.x_count;
+        dom.formLabelK.textContent = c.labels.sample_size;
+        dom.formLabelT.textContent = c.labels.trials;
+        dom.formLabelA.textContent = c.labels.alpha;
+        dom.formLabelM.textContent = c.labels.m_fixed;
+        dom.formLabelG.textContent = c.labels.g_min;
+        dom.applyBtn.textContent = c.buttons.apply;
+      }
+
+      function initForm() {
+        dom.inputN.value = CONFIG.N;
+        dom.inputNi.value = CONFIG.NX;
+        dom.inputK.value = CONFIG.K;
+        dom.inputT.value = CONFIG.T;
+        dom.inputA.value = CONFIG.ALPHA;
+        dom.inputM.value = CONFIG.M === null ? "" : CONFIG.M;
+        dom.inputG.value = CONFIG.G;
+
+        dom.applyBtn.addEventListener("click", () => {
+          const fields = [
+            ["N", dom.inputN],
+            ["ni", dom.inputNi],
+            ["K", dom.inputK],
+            ["T", dom.inputT],
+            ["a", dom.inputA],
+            ["M", dom.inputM],
+            ["g", dom.inputG],
+          ];
+          const parts = [];
+          for (const [key, input] of fields) {
+            const value = input.value.trim();
+            if (value !== "") parts.push(`${key}=${value}`);
+          }
+          const next = parts.join("&");
+          if (`#${next}` === window.location.hash) return;
+          window.location.hash = next;
+        });
+      }
+
+      // CONFIG.M は意見Xを含むクラスタ総数なので、X以外の分布には M-1 個を割り当てる
+      function findMEffAndC(total, alpha, maxRank) {
+        const cap = CONFIG.M ? Math.min(CONFIG.M - 1, maxRank) : maxRank;
+        let harmonic = 0;
+        for (let m = 1; m <= cap; m++) {
+          harmonic += 1 / Math.pow(m, alpha);
+          const c = total / harmonic;
+          if (CONFIG.M && m === cap) return { mEff: m, c };
+          const next = c / Math.pow(m + 1, alpha);
+          if (next < CONFIG.G) return { mEff: m, c };
+        }
+        throw new Error(`Failed to find M_eff within ${maxRank}`);
+      }
+
+      function buildZipfCounts(total, alpha) {
+        if (total <= 0) return [];
+        const { mEff, c } = findMEffAndC(total, alpha, CONFIG.MAX_RANK);
+        const raw = [];
+        const counts = [];
+        const fracs = [];
+
+        let used = 0;
+        for (let r = 1; r <= mEff; r++) {
+          const value = c / Math.pow(r, alpha);
+          raw.push(value);
+          const base = Math.floor(value);
+          counts.push(base);
+          fracs.push(value - base);
+          used += base;
+        }
+
+        let rest = total - used;
+        const order = [...fracs.keys()].sort((a, b) => fracs[b] - fracs[a]);
+        for (let i = 0; i < rest; i++) {
+          counts[order[i % order.length]] += 1;
+        }
+
+        return counts.map((count, idx) => ({ id: `O${idx + 1}`, count }));
+      }
+
+      function buildDistribution() {
+        const others = buildZipfCounts(CONFIG.N - CONFIG.NX, CONFIG.ALPHA);
+        const all = [{ id: "X", count: CONFIG.NX }, ...others];
+        all.sort((a, b) => b.count - a.count);
+
+        const xRank = all.findIndex((item) => item.id === "X") + 1;
+        const top = all.slice(0, CONFIG.TOP).map((item, idx) => ({
+          rank: idx + 1,
+          id: item.id,
+          count: item.count,
+          isX: item.id === "X",
+        }));
+
+        return { all, top, xRank };
+      }
+
+      function runOneTrial() {
+        let remainingN = CONFIG.N;
+        let remainingX = CONFIG.NX;
+
+        for (let i = 0; i < CONFIG.K; i++) {
+          if (remainingX <= 0) return false;
+          if (Math.random() < remainingX / remainingN) return true;
+          remainingN -= 1;
+        }
+
+        return false;
+      }
+
+      function runSampling() {
+        let observed = 0;
+        for (let t = 0; t < CONFIG.T; t++) {
+          if (runOneTrial()) observed += 1;
+        }
+        const missed = CONFIG.T - observed;
+        return { observed, missed, observedRate: observed / CONFIG.T };
+      }
+
+      function theoreticalApproxRate() {
+        return 1 - Math.exp((-CONFIG.K * CONFIG.NX) / CONFIG.N);
+      }
+
+      function theoreticalExactRate() {
+        let miss = 1;
+        for (let i = 0; i < CONFIG.K; i++) {
+          miss *= (CONFIG.N - CONFIG.NX - i) / (CONFIG.N - i);
+        }
+        return 1 - miss;
+      }
+
+      function renderDistribution(distribution, content) {
+        dom.bars.innerHTML = "";
+
+        const maxCount = distribution.top.length > 0
+          ? Math.max(...distribution.top.map((d) => d.count))
+          : 1;
+
+        for (const row of distribution.top) {
+          const el = document.createElement("div");
+          el.className = `bar-row${row.isX ? " x" : ""}`;
+
+          const label = document.createElement("div");
+          label.className = "label";
+          label.textContent = `${row.rank}. ${row.id}`;
+
+          const track = document.createElement("div");
+          track.className = "bar-track";
+          const fill = document.createElement("div");
+          fill.className = "bar-fill";
+          fill.style.width = `${(row.count / maxCount) * 100}%`;
+          track.appendChild(fill);
+
+          const count = document.createElement("div");
+          count.className = "count";
+          count.textContent = fmtInt(row.count);
+
+          el.appendChild(label);
+          el.appendChild(track);
+          el.appendChild(count);
+
+          dom.bars.appendChild(el);
+        }
+
+        if (distribution.xRank > CONFIG.TOP) {
+          dom.xRankMessage.textContent = tpl(content.messages.x_not_in_top, {
+            ...TPL_VARS,
+            rank: distribution.xRank,
+          });
+        } else {
+          dom.xRankMessage.textContent = "";
+        }
+      }
+
+      function renderScenario() {
+        dom.valuePopulation.textContent = fmtInt(CONFIG.N);
+        dom.valueXCount.textContent = fmtInt(CONFIG.NX);
+        dom.valueSampleSize.textContent = fmtInt(CONFIG.K);
+        dom.valueTrials.textContent = fmtInt(CONFIG.T);
+        dom.valueAlpha.textContent = CONFIG.ALPHA.toFixed(2);
+      }
+
+      function renderResults(result, xRank, content) {
+        const approx = theoreticalApproxRate();
+        const exact = theoreticalExactRate();
+
+        dom.numObserved.textContent = `${fmtInt(result.observed)} / ${fmtInt(CONFIG.T)}`;
+        dom.numMissed.textContent = `${fmtInt(result.missed)} / ${fmtInt(CONFIG.T)}`;
+        dom.numObservedRate.textContent = fmtPct(result.observedRate);
+        dom.numTheoreticalRate.textContent = fmtPct(approx);
+        dom.numTheoreticalExact.textContent = fmtPct(exact);
+        dom.numXRank.textContent = `${xRank} ${content.messages.rank_suffix}`;
+      }
+
+      function timeStamp() {
+        const now = new Date();
+        return now.toLocaleTimeString("ja-JP", { hour12: false });
+      }
+
+      async function main() {
+        const content = await loadContent();
+        applyContent(content);
+
+        const distribution = buildDistribution();
+        renderScenario();
+        initForm();
+        dom.valueClusters.textContent = fmtInt(distribution.all.length);
+        renderDistribution(distribution, content);
+
+        function rerun() {
+          const result = runSampling();
+          renderResults(result, distribution.xRank, content);
+          dom.runStatus.textContent = `${content.messages.last_run}: ${timeStamp()}`;
+        }
+
+        dom.rerunBtn.addEventListener("click", rerun);
+        rerun();
+      }
+
+      window.addEventListener("hashchange", () => window.location.reload());
+
+      main();
+    </script>
+  </body>
+</html>
